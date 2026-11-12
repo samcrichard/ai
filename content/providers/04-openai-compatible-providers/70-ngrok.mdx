@@ -1,0 +1,115 @@
+---
+title: ngrok AI Gateway
+description: Use the ngrok AI Gateway OpenAI compatible API with the AI SDK.
+---
+
+# ngrok AI Gateway Provider
+
+The [ngrok AI Gateway](https://ngrok.ai) gives you one access key for models from many providers, with automatic failover between providers and keys, spend tracking, and routing to models you run yourself (Ollama, vLLM, LM Studio). You can use it with the AI SDK through the `@ai-sdk/openai-compatible` module.
+
+## Setup
+
+The ngrok AI Gateway is available via the `@ai-sdk/openai-compatible` module as it is compatible with the OpenAI API. You can install it with:
+
+<InstallPackages packages="@ai-sdk/openai-compatible" />
+
+## Provider Instance
+
+To use the ngrok AI Gateway, you can create a custom provider instance with the `createOpenAICompatible` function from `@ai-sdk/openai-compatible`:
+
+```ts
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+
+const ngrok = createOpenAICompatible({
+  name: 'ngrok',
+  baseURL: 'https://gateway.ngrok.ai/v1',
+  apiKey: process.env.NGROK_AI_GATEWAY_KEY,
+  includeUsage: true,
+});
+```
+
+<Note>
+  You can create an access key at [app.ngrok.ai/keys](https://app.ngrok.ai/keys).
+  Make sure to set the `NGROK_AI_GATEWAY_KEY` environment variable with your
+  access key.
+</Note>
+
+## Language Models
+
+You can create ngrok AI Gateway models using a provider instance. The first argument is a model ID from the [ngrok model catalog](https://ngrok.com/docs/ai-gateway/reference/model-catalog), e.g. `anthropic/claude-sonnet-5-5` or `openai/gpt-5.5`. The gateway picks a provider that serves the model. To pin a specific provider, use `provider:model`, e.g. `openai:gpt-5.5`.
+
+```ts
+const model = ngrok('anthropic/claude-sonnet-5-5');
+```
+
+`GET https://gateway.ngrok.ai/v1/models` returns the models your access key is allowed to call.
+
+### Example
+
+You can use ngrok AI Gateway language models to generate text with the `generateText` function:
+
+```ts
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+import { generateText } from 'ai';
+
+const ngrok = createOpenAICompatible({
+  name: 'ngrok',
+  baseURL: 'https://gateway.ngrok.ai/v1',
+  apiKey: process.env.NGROK_AI_GATEWAY_KEY,
+  includeUsage: true,
+});
+
+const { text } = await generateText({
+  model: ngrok('anthropic/claude-sonnet-5-5'),
+  prompt: 'Write a vegetarian lasagna recipe for 4 people.',
+});
+
+console.log(text);
+```
+
+ngrok AI Gateway language models can also generate text in a streaming fashion with the `streamText` function:
+
+```ts
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+import { streamText } from 'ai';
+
+const ngrok = createOpenAICompatible({
+  name: 'ngrok',
+  baseURL: 'https://gateway.ngrok.ai/v1',
+  apiKey: process.env.NGROK_AI_GATEWAY_KEY,
+  includeUsage: true,
+});
+
+const result = streamText({
+  model: ngrok('openai/gpt-5.5'),
+  prompt: 'Write a short haiku about tunnels.',
+});
+
+for await (const message of result.textStream) {
+  console.log(message);
+}
+```
+
+## Embedding Models
+
+You can create embedding models with the `.embeddingModel()` factory method:
+
+```ts
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+import { embed } from 'ai';
+
+const ngrok = createOpenAICompatible({
+  name: 'ngrok',
+  baseURL: 'https://gateway.ngrok.ai/v1',
+  apiKey: process.env.NGROK_AI_GATEWAY_KEY,
+});
+
+const { embedding } = await embed({
+  model: ngrok.embeddingModel('amazon/titan-embed-text-v2'),
+  value: 'sunny day at the beach',
+});
+```
+
+## Models You Run Yourself
+
+You can add a model server on your own network, such as Ollama or vLLM, to the gateway as a custom provider, then call it with `provider:model`, e.g. `ngrok('my-ollama:llama3.2')`. See [Use a model you run yourself](https://ngrok.com/docs/ai-gateway/guides/use-a-model-you-run-yourself) for setup.
