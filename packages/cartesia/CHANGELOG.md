@@ -1,5 +1,13 @@
 # @ai-sdk/cartesia
 
+## 3.0.75
+
+### Patch Changes
+
+- b7f3132: Add a Cartesia catalog for speech, transcription, and realtime model IDs, capabilities, and provider options. Document word timestamps only for batch transcription.
+- Updated dependencies [2ebc78b]
+  - @ai-sdk/provider-utils@5.0.80
+
 ## 3.0.74
 
 ### Patch Changes

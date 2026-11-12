@@ -1,5 +1,12 @@
 # @ai-sdk/alibaba
 
+## 2.0.89
+
+### Patch Changes
+
+- Updated dependencies [2ebc78b]
+  - @ai-sdk/provider-utils@5.0.80
+
 ## 2.0.88
 
 ### Patch Changes

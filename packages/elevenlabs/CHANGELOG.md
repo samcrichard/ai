@@ -1,5 +1,13 @@
 # @ai-sdk/elevenlabs
 
+## 3.0.85
+
+### Patch Changes
+
+- 04b91cc: Add an ElevenLabs model catalog for speech and transcription model IDs, endpoint routing policies, capabilities, and provider option metadata.
+- Updated dependencies [2ebc78b]
+  - @ai-sdk/provider-utils@5.0.80
+
 ## 3.0.84
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @ai-sdk/hume
 
+## 3.0.80
+
+### Patch Changes
+
+- 4ec95dd: Centralize Hume speech capabilities, output formats, and provider option metadata in a model catalog used by runtime validation and generated documentation.
+- Updated dependencies [2ebc78b]
+  - @ai-sdk/provider-utils@5.0.80
+
 ## 3.0.79
 
 ### Patch Changes

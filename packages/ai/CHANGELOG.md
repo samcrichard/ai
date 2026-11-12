@@ -1,5 +1,21 @@
 # ai
 
+## 7.0.171
+
+### Patch Changes
+
+- 11323f9: Prevent excessive memory and CPU usage when validating malformed UI messages. `validateUIMessages`, `safeValidateUIMessages`, and the agent UI stream helpers reported the issues of every part schema for every invalid part, so a small request with many malformed parts could exhaust memory. Each part is now validated against the schemas for its type only, validation stops at the first invalid message or part, and an invalid JSON value in provider or tool metadata is reported as a single issue.
+- 2ebc78b: Forward the provider's configured fetch transport when downloading file inputs. Add a `fetch` option to `createDownload` so core downloads can also use `guarded-fetch` for opt-in DNS validation on Node.js. The function returned by `createDownload` can now also be passed as `experimental_download` to `generateText` and `streamText`, and `experimental_download` now also handles generated file URLs returned by the model, so one hook covers all core downloads. Document that the default URL checks do not resolve DNS and recommend the guarded transport or network egress controls for untrusted URLs.
+
+  Keep Azure image and Vertex tool-result downloads separate from provider authentication wrappers so file hosts never receive Azure bearer tokens or Vertex Express Mode API keys.
+
+  Pass the call's abort signal to custom download requests, including prompt assets and generated files, so `experimental_download: createDownload({ fetch })` preserves cancellation and timeouts.
+
+- ceeee29: Warn when a UI message stream sends a tool error text that differs from the text the model received and then sends reasoning from a later step. By default, `toUIMessageStream` sends "An error occurred." to the client for a failed tool call, while the model receives the full error text during a multi-step call. Converting the stored UI messages back with `convertToModelMessages` then changes the tool result, and models that bind reasoning to the preceding messages (for example Anthropic models with preserved thinking) reject the request. The request still fails after this change; the warning and the updated documentation explain the cause and the available options.
+- Updated dependencies [2ebc78b]
+  - @ai-sdk/provider-utils@5.0.80
+  - @ai-sdk/gateway@4.0.144
+
 ## 7.0.170
 
 ### Patch Changes

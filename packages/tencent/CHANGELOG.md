@@ -1,5 +1,15 @@
 # @ai-sdk/tencent
 
+## 3.0.2
+
+### Patch Changes
+
+- 790b217: Add a Tencent language and video model catalog for model ID suggestions, backend routing policies, capabilities, and provider option metadata.
+- Updated dependencies [2ebc78b]
+- Updated dependencies [2ebc78b]
+  - @ai-sdk/openai-compatible@3.0.91
+  - @ai-sdk/provider-utils@5.0.80
+
 ## 3.0.1
 
 ### Patch Changes
